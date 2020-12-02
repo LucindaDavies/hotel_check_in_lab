@@ -1,7 +1,7 @@
 <template>
   <div id='app'>
-    <booking-form></booking-form>
-    <bookings-list></bookings-list>
+    <booking-form id="appform"></booking-form>
+    <bookings-list :bookings="bookings"></bookings-list>
   </div>
 </template>
 
@@ -27,10 +27,28 @@ export default {
         fetch('http://localhost:3000/api/bookings')
         .then((res) => res.json())
         .then((data) => this.bookings = data)
+
+        eventBus.$on("booking-added", (data) => {
+          this.bookings.push(data)
+        })
+        eventBus.$on("delete-booking", (id) => {
+          this.deleteBooking(id)
+        })
+    },
+    methods: {
+      deleteBooking(id) {
+        const bookingsToKeep = this.bookings.filter(booking => booking._id !== id)
+        this.bookings = bookingsToKeep
+        
+      }
+
     }
 }
 </script>
 
-<style>
-
+<style scoped>
+  #appform {
+    background-color: indianred;
+    padding-inline: 300px;
+  }
 </style>
