@@ -9,6 +9,7 @@
 
 import BookingsList from './components/BookingsList.vue'
 import BookingForm from './components/BookingForm.vue'
+import { eventBus } from './main.js'
 
 export default {
     name: 'app',
@@ -23,7 +24,9 @@ export default {
         'booking-form': BookingForm
     },
     mounted() {
-        //fetch api
+        fetch('http://localhost:3000/api/bookings')
+        .then((res) => res.json())
+        .then((data) => this.bookings = data)
     }
 }
 </script>

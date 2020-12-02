@@ -7,7 +7,7 @@
           <input type="email" v-model="email" required/>
           <label>Checked-in:</label>
           <input type="checkbox" v-model="checkedIn">
-          <input type="submit" value="addBooking">
+          <input type="submit" value="add booking">
       </form>
 
   </div>
@@ -15,7 +15,11 @@
 
 <script>
 
+import { eventBus } from '../main.js'
+
 export default {
+
+    
     name: 'booking-form',
     data(){
         return {
@@ -31,6 +35,18 @@ export default {
                 email: this.email,
                 checkedIn: this.checkedIn
             }
+            fetch('http://localhost:3000/api/bookings', {
+                method: "POST",
+                body: JSON.stringify(booking),
+                headers: {'Content-Type': 'application/json'}
+            })
+            .then((res) => res.json())
+            .then((data) => {
+                eventBus.$emit("booking-added", data)
+            })
+            this.name = ""
+            this.email = ""
+            this.checkedIn = false
         }
     }
 
